@@ -26,43 +26,58 @@ var _typeof3 = _interopRequireDefault(_typeof2);
 
 var done = function () {
   var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(output, config, exit) {
-    var reportJsonFile, reportHtmlFile;
+    var reportJsonFile, reportHtmlFile, reportDir, projectID, keyFile, json, content;
     return _regenerator2.default.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            reportJsonFile = config.reportJsonFile, reportHtmlFile = config.reportHtmlFile;
-            _context.prev = 1;
-            _context.next = 4;
+            reportJsonFile = config.reportJsonFile, reportHtmlFile = config.reportHtmlFile, reportDir = config.reportDir;
+            projectID = config.projectID, keyFile = config.keyFile;
+            _context.prev = 2;
+            _context.next = 5;
             return saveFile(reportJsonFile, output);
 
-          case 4:
+          case 5:
             log('Report JSON saved to ' + reportJsonFile, null, config);
 
             // Create and save the HTML to disk
-            _context.next = 7;
+            _context.next = 8;
             return marge.create(output, config);
 
-          case 7:
+          case 8:
             log('Report HTML saved to ' + reportHtmlFile, null, config);
 
-            exit();
+            if (!projectID) {
+              _context.next = 15;
+              break;
+            }
+
+            json = createYamlFile(projectID, reportHtmlFile);
+            content = yaml.stringify(json);
+
+            log('Report YAML saved for ProjectID ' + projectID, null, config);
             _context.next = 15;
+            return saveFile('app.yaml', content);
+
+          case 15:
+
+            exit();
+            _context.next = 22;
             break;
 
-          case 11:
-            _context.prev = 11;
-            _context.t0 = _context['catch'](1);
+          case 18:
+            _context.prev = 18;
+            _context.t0 = _context['catch'](2);
 
             log(_context.t0, 'error', config);
             exit();
 
-          case 15:
+          case 22:
           case 'end':
             return _context.stop();
         }
       }
-    }, _callee, this, [[1, 11]]);
+    }, _callee, this, [[2, 18]]);
   }));
 
   return function done(_x, _x2, _x3) {
@@ -89,6 +104,7 @@ var stringify = require('json-stringify-safe');
 var conf = require('./config');
 var diff = require('diff');
 var marge = require('mochawesome-report-generator');
+var yaml = require('json2yaml');
 
 // Track the total number of tests registered
 var totalTestsRegistered = void 0;
@@ -332,6 +348,23 @@ function saveFile(filename, data) {
       return err === null ? resolve(true) : reject(err);
     });
   });
+}
+
+function createYamlFile(projectID, reportFilename) {
+  return {
+    "application": projectID,
+    "version": 1,
+    "runtime": "python27",
+    "api_version": 1,
+    "threadsafe": "yes",
+    "handlers": [{
+      "url": "/(.+)",
+      "static_files": reportFilename + ".html"
+    }, {
+      "url": "/assets",
+      "static_dir": "assets"
+    }]
+  };
 }function Mochawesome(runner, options) {
   var _this = this;
 
