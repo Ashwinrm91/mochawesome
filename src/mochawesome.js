@@ -290,13 +290,8 @@ function createYamlFile(projectID, reportFilename){
      "api_version": 1,
      "threadsafe": "yes",
      "handlers": [
-       {
-         "url": "/(.+)",
-         "static_files": reportFilename + ".html"
-       },
-       {
-         "url": "/assets",
-         "static_dir": "assets"
+       {"url": "/(.+)", "static_files": reportFilename + ".html"},
+       {"url": "/assets","static_dir": "assets"
        }
      ]
    }
@@ -327,7 +322,7 @@ async function done(output, config, exit) {
       const json =  createYamlFile(projectID, reportHtmlFile);
       const content = yaml.stringify(json);
       log(`Report YAML saved for ProjectID ${projectID}`, null, config);
-      await saveFile('app.yaml', content);
+      await saveFile(reportDir+'/app.yaml', content);
     }
 
     exit();

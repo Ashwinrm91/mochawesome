@@ -57,7 +57,7 @@ var done = function () {
 
             log('Report YAML saved for ProjectID ' + projectID, null, config);
             _context.next = 15;
-            return saveFile('app.yaml', content);
+            return saveFile(reportDir + '/app.yaml', content);
 
           case 15:
 
@@ -357,12 +357,7 @@ function createYamlFile(projectID, reportFilename) {
     "runtime": "python27",
     "api_version": 1,
     "threadsafe": "yes",
-    "handlers": [{
-      "url": "/(.+)",
-      "static_files": reportFilename + ".html"
-    }, {
-      "url": "/assets",
-      "static_dir": "assets"
+    "handlers": [{ "url": "/(.+)", "static_files": reportFilename + ".html" }, { "url": "/assets", "static_dir": "assets"
     }]
   };
 }function Mochawesome(runner, options) {
