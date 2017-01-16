@@ -45,6 +45,8 @@ module.exports = function (opts) {
   options.enableCharts = _getOption('enableCharts', opts, true);
   options.enableTestCode = _getOption('enableTestCode', opts, true);
   options.quiet = _getOption('quiet', opts, true);
+  options.projectID = _getOption('projectID', opts, true);
+  options.keyFile = _getOption('keyFile', opts, true);
 
   // Report Files
   options.reportJsonFile = path.join(options.reportDir, `${options.reportFilename}.json`);
