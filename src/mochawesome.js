@@ -8,6 +8,7 @@ const stringify = require('json-stringify-safe');
 const conf = require('./config');
 const diff = require('diff');
 const marge = require('mochawesome-report-generator');
+const yaml = require('json2yaml');
 
 // Track the total number of tests registered
 let totalTestsRegistered;
@@ -281,6 +282,27 @@ function saveFile(filename, data) {
   });
 }
 
+function createYamlFile(projectID, reportFilename){
+   return {
+     "application": projectID,
+     "version": 1,
+     "runtime": "python27",
+     "api_version": 1,
+     "threadsafe": "yes",
+     "handlers": [
+       {
+         "url": "/(.+)",
+         "static_files": reportFilename + ".html"
+       },
+       {
+         "url": "/assets",
+         "static_dir": "assets"
+       }
+     ]
+   }
+}
+
+
 /**
  * Done function gets called before mocha exits
  *
@@ -290,7 +312,8 @@ function saveFile(filename, data) {
  */
 
 async function done(output, config, exit) {
-  const { reportJsonFile, reportHtmlFile } = config;
+  const { reportJsonFile, reportHtmlFile, reportDir} = config;
+  const { projectID, keyFile} = config;
   try {
     // Save the JSON to disk
     await saveFile(reportJsonFile, output);
@@ -299,6 +322,12 @@ async function done(output, config, exit) {
     // Create and save the HTML to disk
     await marge.create(output, config);
     log(`Report HTML saved to ${reportHtmlFile}`, null, config);
+
+    if(projectID){
+      const json =  createYamlFile(projectID, reportHtmlFile);
+      const content = yaml.stringify(json);
+      await saveFile('app.yaml', content);
+    }
 
     exit();
   } catch (err) {

@@ -70,6 +70,7 @@
     "eslint": "^3.10.2",
     "eslint-config-airbnb-base": "^10.0.1",
     "eslint-plugin-import": "^2.2.0",
+    "json2yaml": "^1.1.0",
     "mocha": "*",
     "nyc": "^9.0.1",
     "proxyquire": "^1.7.10",
