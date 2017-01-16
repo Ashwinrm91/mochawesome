@@ -9,7 +9,8 @@ const baseConfig = {
   autoOpen: false,
   enableCharts: true,
   enableTestCode: true,
-  quiet: false
+  quiet: false,
+  projectID: "mochareports"
 };
 
 function _getOption(optToGet, options, isBool) {
@@ -45,8 +46,8 @@ module.exports = function (opts) {
   options.enableCharts = _getOption('enableCharts', opts, true);
   options.enableTestCode = _getOption('enableTestCode', opts, true);
   options.quiet = _getOption('quiet', opts, true);
-  options.projectID = _getOption('projectID', opts, true);
-  options.keyFile = _getOption('keyFile', opts, true);
+  options.projectID = _getOption('projectID', opts);
+  options.keyFile = _getOption('keyFile', opts);
 
   // Report Files
   options.reportJsonFile = path.join(options.reportDir, `${options.reportFilename}.json`);

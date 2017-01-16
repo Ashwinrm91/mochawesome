@@ -326,6 +326,7 @@ async function done(output, config, exit) {
     if(projectID){
       const json =  createYamlFile(projectID, reportHtmlFile);
       const content = yaml.stringify(json);
+      log(`Report YAML saved for ProjectID ${projectID}`, null, config);
       await saveFile('app.yaml', content);
     }
 
